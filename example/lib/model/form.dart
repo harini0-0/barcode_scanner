@@ -1,6 +1,6 @@
 class QRResult {
 
-  String _qrMsg;
+  final String _qrMsg;
 
   QRResult(this._qrMsg);
 
