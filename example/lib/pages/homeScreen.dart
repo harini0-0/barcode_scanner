@@ -65,6 +65,7 @@ class _HomePageState extends State<HomePage> {
         await FirebaseFirestore.instance.collection('qrData').add(
       {
         'qrMsg': qrData,
+        'User': user?.email,
       },
     );
   }
