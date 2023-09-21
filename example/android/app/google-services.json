@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "689550107823",
-    "project_id": "qrscanner-5794d",
-    "storage_bucket": "qrscanner-5794d.appspot.com"
+    "project_number": "400351468762",
+    "project_id": "barcodescanner-f45f4",
+    "storage_bucket": "barcodescanner-f45f4.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:689550107823:android:b14d33d312dd56c777e05a",
+        "mobilesdk_app_id": "1:400351468762:android:5621e16c72b763429819e3",
         "android_client_info": {
-          "package_name": "com.example.qrscan"
+          "package_name": "com.o9.qrscanner"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDTjP9B3RoO8eU3T2IpWRu_EEpSPjUUrdE"
+          "current_key": "AIzaSyD0_AbYpFbLCMx175JxQAF5ddC9VXINz1E"
         }
       ],
       "services": {

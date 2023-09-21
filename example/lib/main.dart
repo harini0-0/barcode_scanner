@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_barcode_scanner_example/model/form.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:http/http.dart' as http;
 
 import 'controller.dart';
 
@@ -34,8 +36,20 @@ class _MyAppState extends State<MyApp> {
   //       .listen((barcode) => print(barcode));
   // }
 
-  Future<void> scanQR() async {
+//var url = Uri.parse('https://azuredevscs.o9solutions.com/api/ibplquery/5327/ExecuteQueryJson');
+var tenantId = '1';
+var url = Uri.parse('http://172.20.10.44:9876/api/ibplquery/1/scanbarcode');
+  
+  Map<String, String> mainHeader = 
+  {
+    "Content-type": "application/json",
+    //"Authorization": "ApiKey blank"
+    "Authorization": "ApiKey wu9ziff2.kgzrmi7w4hvgewks95w4scw"
+  };
+
+  Future<void> scanQR({required String context}) async {
     print("reached 2");
+    print(context);
     String barcodeScanRes;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
@@ -51,18 +65,38 @@ class _MyAppState extends State<MyApp> {
     // setState to update our non-existent appearance.
     if (!mounted) return;
     // _submitForm(barcodeScanRes);
-    await _addData(qrData: barcodeScanRes);
+    await _addData(qrData: barcodeScanRes, context: context);
     setState(() {
       _scanBarcode = barcodeScanRes;
 
     });
   }
-  Future _addData({required String qrData}) async {
+  Future _addData({required String qrData, required String context}) async {
+    print("reached3");
+    print(context);
     DocumentReference docRef = await FirebaseFirestore.instance.collection('qrData').add(
       {
         'qrMsg': qrData,
       },
     );
+
+    print("reached4");
+
+    //var response = await http.post(url, headers: mainHeader, body: {'qrMsg': qrData});
+
+    
+    var response = await http.post(url, headers: mainHeader, body: jsonEncode({'barcode': qrData, 'context' : context }));
+
+    //var response = await http.post(url, headers: mainHeader, body: jsonEncode({'barcode': '123', 'context': 'gate-123' }));
+  
+
+  // check the status code for the result  
+  if (response.statusCode == 200) {
+    print(response.body);
+  } else {
+    print('Request failed with status: ${response.statusCode}.');
+  }  
+
   }
   // Platform messages are asynchronous, so we initialize in an async method.
   // Future<void> scanBarcodeNormal() async {
@@ -136,11 +170,21 @@ class _MyAppState extends State<MyApp> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         ElevatedButton(
-                            onPressed: () => scanQR(),
-                            child: Text('Start QR scan')),
+                            onPressed: () => scanQR(context: 'Picker'),
+                            child: Text('Start QR scan1')),
+                        ElevatedButton(
+                            onPressed: () => scanQR(context: 'Dispatch'),
+                            child: Text('Start QR scan2')),
+                        ElevatedButton(
+                            onPressed: () => scanQR(context: 'Receiver'),
+                            child: Text('Start QR scan3')),
+                        ElevatedButton(
+                            onPressed: () => scanQR(context: 'Putaway'),
+                            child: Text('Start QR scan4')),
                         Text('Scan result : $_scanBarcode\n',
                             style: TextStyle(fontSize: 20))
-                      ]));
+                      ]
+                      ));
             })));
   }
 }
